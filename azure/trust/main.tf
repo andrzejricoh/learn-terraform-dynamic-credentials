@@ -1,30 +1,12 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
-    }
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = "~> 3.0"
-    }
-  }
-  required_version = "~> 1.9"
+data "azurerm_client_config" "current" {
 }
-
-provider "azurerm" {
-  features {}
-}
-
-provider "azuread" {}
-
-data "azurerm_subscription" "current" {}
 
 resource "azuread_application" "tfc_application" {
   display_name = "tfc-application"
+  owners       = [data.azurerm_client_config.current.object_id]
 }
 
 resource "azuread_service_principal" "tfc_service_principal" {

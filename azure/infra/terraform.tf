@@ -2,12 +2,13 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.44.1"
+      version = "~> 4.0"
     }
   }
-  cloud {
-    workspaces {
-      name = "learn-terraform-dynamic-credentials"
-    }
-  }
+  # cloud {
+  #   organization = "andrzej"
+  #   workspaces {
+  #     name = "learn-terraform-dynamic-credentials"
+  #   }
+  # }
 }
