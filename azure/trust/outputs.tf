@@ -10,7 +10,8 @@ output "tenant_id" {
 
 output "run_client_id" {
   description = "Client ID for trust relationship"
-  value       = azuread_application.tfc_application.application_id
+  # value       = azuread_application.tfc_application.application_id
+  value = azuread_application.tfc_application.client_id
 }
 
 output "openid_claims" {

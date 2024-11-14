@@ -1,6 +1,20 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 3.0"
+    }
+  }
+  required_version = "~> 1.9"
+}
+
 provider "azurerm" {
   features {}
 }
@@ -14,23 +28,26 @@ resource "azuread_application" "tfc_application" {
 }
 
 resource "azuread_service_principal" "tfc_service_principal" {
-  application_id = azuread_application.tfc_application.application_id
+  # application_id = azuread_application.tfc_application.application_id
+  client_id = azuread_application.tfc_application.client_id
 }
 
 resource "azuread_application_federated_identity_credential" "tfc_federated_credential_plan" {
-  application_object_id = azuread_application.tfc_application.object_id
-  display_name          = "my-tfc-federated-credential-plan"
-  audiences             = [var.tfc_azure_audience]
-  issuer                = "https://${var.tfc_hostname}"
-  subject               = "organization:${var.tfc_organization_name}:project:${var.tfc_project_name}:workspace:${var.tfc_workspace_name}:run_phase:plan"
+  # application_object_id = azuread_application.tfc_application.object_id
+  application_id = azuread_application.tfc_application.id
+  display_name   = "my-tfc-federated-credential-plan"
+  audiences      = [var.tfc_azure_audience]
+  issuer         = "https://${var.tfc_hostname}"
+  subject        = "organization:${var.tfc_organization_name}:project:${var.tfc_project_name}:workspace:${var.tfc_workspace_name}:run_phase:plan"
 }
 
 resource "azuread_application_federated_identity_credential" "tfc_federated_credential_apply" {
-  application_object_id = azuread_application.tfc_application.object_id
-  display_name          = "my-tfc-federated-credential-apply"
-  audiences             = [var.tfc_azure_audience]
-  issuer                = "https://${var.tfc_hostname}"
-  subject               = "organization:${var.tfc_organization_name}:project:${var.tfc_project_name}:workspace:${var.tfc_workspace_name}:run_phase:apply"
+  # application_object_id = azuread_application.tfc_application.object_id
+  application_id = azuread_application.tfc_application.id
+  display_name   = "my-tfc-federated-credential-apply"
+  audiences      = [var.tfc_azure_audience]
+  issuer         = "https://${var.tfc_hostname}"
+  subject        = "organization:${var.tfc_organization_name}:project:${var.tfc_project_name}:workspace:${var.tfc_workspace_name}:run_phase:apply"
 }
 
 resource "azurerm_role_assignment" "tfc_role_assignment" {
